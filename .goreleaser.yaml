@@ -1,0 +1,36 @@
+project_name: flowgo
+
+builds:
+  - main: ./main.go
+    goos:
+      - linux
+      - darwin
+      - windows
+    goarch:
+      - amd64
+      - arm64
+    ldflags:
+      - -s -w
+    env:
+      - CGO_ENABLED=0
+
+archives:
+  - format: tar.gz
+    replacements:
+      darwin: macOS
+      amd64: x86_64
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - LICENSE
+      - README.md
+
+checksum:
+  name_template: "checksums.txt"
+
+release:
+  github:
+    owner: fuegoers
+    name: flowgo
+
+changelog:
+  use: git
