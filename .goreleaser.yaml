@@ -23,10 +23,7 @@ archives:
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
     wrap_in_directory: false
     files:
-      - LICENSE
       - README.md
-
-
 
 checksum:
   name_template: "checksums.txt"
