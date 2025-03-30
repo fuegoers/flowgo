@@ -3,27 +3,24 @@
 set -e
 
 REPO="fuegoers/flowgo"
-VERSION=${VERSION:-latest}
 BINARY_NAME="flowgo"
 INSTALL_DIR="/usr/local/bin"
+VERSION=${VERSION:-latest}
 
 echo "📦 Installing $BINARY_NAME..."
 
-# Detect OS/ARCH
+# Detect OS and Arch
 OS=$(uname | tr '[:upper:]' '[:lower:]')
 ARCH=$(uname -m)
 
-# Map ARCH for GoReleaser output
-if [ "$ARCH" = "x86_64" ]; then
-  ARCH="amd64"
-elif [ "$ARCH" = "arm64" ]; then
-  ARCH="arm64"
-else
-  echo "❌ Unsupported architecture: $ARCH"
-  exit 1
-fi
+# Normalize architecture
+case "$ARCH" in
+  x86_64) ARCH="amd64" ;;
+  arm64|aarch64) ARCH="arm64" ;;
+  *) echo "❌ Unsupported architecture: $ARCH"; exit 1 ;;
+esac
 
-# Get latest version tag
+# Resolve latest version tag
 if [ "$VERSION" = "latest" ]; then
   VERSION=$(curl -s "https://api.github.com/repos/$REPO/releases/latest" | grep tag_name | cut -d '"' -f4)
 fi
@@ -33,6 +30,16 @@ FILENAME="${BINARY_NAME}_${VERSION_NO_V}_${OS}_${ARCH}.tar.gz"
 URL="https://github.com/${REPO}/releases/download/${VERSION}/${FILENAME}"
 
 echo "⬇️ Downloading $FILENAME..."
+
+# Check if asset exists
+STATUS=$(curl -s -L -o /dev/null -w "%{http_code}" "$URL")
+if [ "$STATUS" != "200" ]; then
+  echo "❌ Failed to download binary (HTTP $STATUS)"
+  echo "👉 Check that version '$VERSION' exists and asset '$FILENAME' is available."
+  exit 1
+fi
+
+# Download and extract
 curl -sSL "$URL" | tar -xz -C /tmp
 
 echo "🚚 Moving binary to $INSTALL_DIR..."
