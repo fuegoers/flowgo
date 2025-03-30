@@ -7,9 +7,10 @@
 ## 📦 Features
 
 - `flowgo branch DEV-123` — Create a Git branch from a Notion task (and move it to "Doing")
-- `flowgo open` — Open the current branch on GitHub in your browser
+- `flowgo open` — Open the current GitHub branch in your browser
+- `flowgo init` — Set up your local config interactively
+- `flowgo update` — Upgrade to the latest version
 - Configurable via `~/.flowgo/config.yaml`
-- Clean Go architecture & CLI with Cobra
 
 ## Tech Stack
 
@@ -34,16 +35,35 @@ make install
 
 Make sure `$HOME/go/bin` is in your `$PATH`
 
+## 📦 Updating
+
+```bash
+flowgo update
+```
+
 ## ⚙️ Configuration
 
-Before using `flowgo`, create your config file:
+The config file is required to use flowgo with Notion.
+
+### 📥 Option 1 — Automatic (recommended)
+
+```bash
+flowgo init
+```
+
+This will:
+
+- Ask for your Notion API Key and Database ID
+- Create `~/.flowgo/config.yaml` for you
+
+### ✍️ Option 2 — Manual
 
 ```bash
 mkdir -p ~/.flowgo
 nano ~/.flowgo/config.yaml
 ```
 
-Paste this inside:
+Paste this:
 
 ```yaml
 notion_api_key: "your_notion_secret_here"
@@ -52,14 +72,10 @@ notion_database_id: "your_notion_database_id"
 
 ## Development
 
-### Build locally
-
 ```bash
-make build
-```
-
-### Clean artifacts
-
-```bash
-make clean
+make build       # Build binary locally
+make run         # Run with args like CMD="branch DEV-123"
+make clean       # Clean build artifacts
+make snapshot    # Build binaries locally via GoReleaser
+make release     # Publish a version (requires VERSION + token)
 ```
