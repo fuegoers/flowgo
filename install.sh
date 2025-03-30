@@ -28,7 +28,8 @@ if [ "$VERSION" = "latest" ]; then
   VERSION=$(curl -s "https://api.github.com/repos/$REPO/releases/latest" | grep tag_name | cut -d '"' -f4)
 fi
 
-FILENAME="${BINARY_NAME}_${VERSION}_${OS}_${ARCH}.tar.gz"
+VERSION_NO_V=$(echo "$VERSION" | sed 's/^v//')
+FILENAME="${BINARY_NAME}_${VERSION_NO_V}_${OS}_${ARCH}.tar.gz"
 URL="https://github.com/${REPO}/releases/download/${VERSION}/${FILENAME}"
 
 echo "⬇️ Downloading $FILENAME..."
