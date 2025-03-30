@@ -6,6 +6,7 @@ import (
 
 	"github.com/fuegoers/flowgo/cmd/branch"
 	"github.com/fuegoers/flowgo/cmd/open"
+	"github.com/fuegoers/flowgo/cmd/update"
 	"github.com/spf13/cobra"
 )
 
@@ -17,6 +18,7 @@ var rootCmd = &cobra.Command{
 func Execute() {
 	rootCmd.AddCommand(branch.NewCommand())
 	rootCmd.AddCommand(open.NewCommand())
+	rootCmd.AddCommand(update.NewCommand())
 
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)
