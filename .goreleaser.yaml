@@ -1,7 +1,10 @@
+version: 2
+
 project_name: flowgo
 
 builds:
-  - main: ./main.go
+  - id: flowgo
+    main: ./main.go
     goos:
       - linux
       - darwin
@@ -15,14 +18,15 @@ builds:
       - CGO_ENABLED=0
 
 archives:
-  - format: tar.gz
-    replacements:
-      darwin: macOS
-      amd64: x86_64
+  - id: default
+    format: tar.gz
     name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    wrap_in_directory: false
     files:
       - LICENSE
       - README.md
+
+
 
 checksum:
   name_template: "checksums.txt"
